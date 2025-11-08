@@ -13,18 +13,15 @@ function WatchWithHilalApp() {
   const [isAdding, setIsAdding] = useState(false);
   const [error, setError] = useState("");
 
-  // 🎬 LocalStorage yükleme
   useEffect(() => {
     const saved = localStorage.getItem("watchwithhilal-movies");
     if (saved) setMovies(JSON.parse(saved));
   }, []);
 
-  // 💾 Değişiklikte kaydet
   useEffect(() => {
     localStorage.setItem("watchwithhilal-movies", JSON.stringify(movies));
   }, [movies]);
 
-  // 🔍 TMDB'den film bul ve ekle
   const addMovie = async (e) => {
     e.preventDefault();
     if (!title.trim()) return;
@@ -41,7 +38,6 @@ function WatchWithHilalApp() {
       const newMovie = {
         id: Date.now(),
         title: title.trim(),
-        tmdbId: movie?.id || null,
         poster: movie?.poster_path ? `${TMDB_IMAGE}${movie.poster_path}` : null,
         year: movie?.release_date ? movie.release_date.slice(0, 4) : "",
         overview: movie?.overview || "",
@@ -60,34 +56,21 @@ function WatchWithHilalApp() {
     }
   };
 
-  // 🗑 Sil
   const deleteMovie = (id) => setMovies(movies.filter((m) => m.id !== id));
-
-  // ❤️ Puan
-  const updateRating = (id, who, value) => {
-    setMovies((prev) =>
-      prev.map((m) =>
-        m.id === id ? { ...m, [who]: value } : m
-      )
-    );
-  };
-
-  // 🎬 İzleme durumu
-  const toggleWatched = (id) => {
+  const toggleWatched = (id) =>
     setMovies((prev) =>
       prev.map((m) =>
         m.id === id ? { ...m, watched: !m.watched } : m
       )
     );
-  };
-
-  const updateNote = (id, value) => {
+  const updateNote = (id, value) =>
     setMovies((prev) =>
-      prev.map((m) =>
-        m.id === id ? { ...m, note: value } : m
-      )
+      prev.map((m) => (m.id === id ? { ...m, note: value } : m))
     );
-  };
+  const updateRating = (id, who, value) =>
+    setMovies((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, [who]: value } : m))
+    );
 
   const filteredMovies =
     filter === "watched"
@@ -96,16 +79,29 @@ function WatchWithHilalApp() {
       ? movies.filter((m) => !m.watched)
       : movies;
 
+  const calcAvg = (m) => {
+    const vals = [m.ratingHilal, m.ratingOkan].filter((x) => x > 0);
+    return vals.length
+      ? Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10
+      : 0;
+  };
+
   const renderHearts = (current, onSelect) => (
-    <div className="flex gap-1 justify-center">
+    <div className="flex gap-2 justify-center">
       {Array.from({ length: HEARTS }, (_, i) => (
         <button
           key={i}
           type="button"
           onClick={() => onSelect(i + 1)}
-          className="text-2xl focus:outline-none hover:scale-110 transition-transform"
+          className="text-3xl focus:outline-none transition-transform hover:scale-125"
         >
-          <span className={i + 1 <= current ? "text-red-500 drop-shadow" : "text-gray-600"}>
+          <span
+            className={`${
+              i + 1 <= current
+                ? "text-red-500 drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]"
+                : "text-gray-700 hover:text-red-400"
+            } transition`}
+          >
             ♥
           </span>
         </button>
@@ -113,18 +109,14 @@ function WatchWithHilalApp() {
     </div>
   );
 
-  const calcAvg = (m) => {
-    const vals = [m.ratingHilal, m.ratingOkan].filter((x) => x > 0);
-    if (!vals.length) return 0;
-    return Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10;
-  };
-
   return (
     <div
-      className="min-h-screen bg-cover bg-center text-white px-4 py-8 relative"
+      className="min-h-screen text-white px-4 py-8 bg-center bg-cover bg-fixed"
       style={{
-        backgroundImage:
-          "linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1505685296765-3a2736de412f?auto=format&fit=crop&w=1600&q=80')",
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.95)), url("https://images.unsplash.com/photo-1605121116928-bbe5c57b2b54?auto=format&fit=crop&w=1920&q=90")`,
+        backgroundAttachment: "fixed",
+        backgroundPosition: "center",
+        backgroundSize: "cover",
       }}
     >
       {/* Üst Başlık */}
@@ -139,12 +131,12 @@ function WatchWithHilalApp() {
             watchwithhilal.watch
           </span>
         </div>
-        <h1 className="text-5xl font-extrabold text-red-500 drop-shadow-[0_0_25px_rgba(248,113,113,0.75)]">
+        <h1 className="text-5xl font-extrabold text-red-500 drop-shadow-[0_0_25px_rgba(248,113,113,0.8)]">
           Bugün ne izlesek?
         </h1>
       </motion.div>
 
-      {/* Film ekleme formu */}
+      {/* Film Ekleme Formu */}
       <motion.form
         onSubmit={addMovie}
         className="max-w-5xl mx-auto flex flex-col md:flex-row gap-3 mb-6 justify-center"
@@ -191,7 +183,7 @@ function WatchWithHilalApp() {
         ))}
       </div>
 
-      {/* Film kartları */}
+      {/* Film Kartları */}
       <div className="max-w-6xl mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filteredMovies.length === 0 ? (
           <p className="text-gray-400 text-center mt-8">Henüz film yok 🎞️</p>
@@ -203,7 +195,7 @@ function WatchWithHilalApp() {
                 key={m.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="relative rounded-2xl overflow-hidden bg-gradient-to-b from-gray-900 to-black border border-red-500/20 shadow-xl"
+                className="relative rounded-2xl overflow-hidden bg-gradient-to-b from-gray-900 to-black border border-red-500/20 shadow-[0_0_15px_rgba(255,0,0,0.3)]"
               >
                 {m.poster ? (
                   <img
@@ -223,12 +215,6 @@ function WatchWithHilalApp() {
                 >
                   ×
                 </button>
-
-                {m.watched && (
-                  <div className="absolute bottom-2 left-2 bg-red-600/90 text-xs px-3 py-1 rounded-full">
-                    ✔ İzlendi
-                  </div>
-                )}
 
                 <div className="p-4 space-y-3">
                   <div className="flex justify-between items-center">
@@ -252,16 +238,24 @@ function WatchWithHilalApp() {
                     rows={2}
                   />
 
-                  <div className="space-y-2 text-xs">
+                  <div className="space-y-3 text-sm">
                     <div>
-                      <span className="text-pink-400 font-semibold block text-center mb-1">Hilal</span>
-                      {renderHearts(m.ratingHilal, (v) => updateRating(m.id, "ratingHilal", v))}
+                      <span className="text-pink-400 font-semibold block text-center mb-1">
+                        Hilal
+                      </span>
+                      {renderHearts(m.ratingHilal, (v) =>
+                        updateRating(m.id, "ratingHilal", v)
+                      )}
                     </div>
                     <div>
-                      <span className="text-blue-400 font-semibold block text-center mb-1">Okan</span>
-                      {renderHearts(m.ratingOkan, (v) => updateRating(m.id, "ratingOkan", v))}
+                      <span className="text-blue-400 font-semibold block text-center mb-1">
+                        Okan
+                      </span>
+                      {renderHearts(m.ratingOkan, (v) =>
+                        updateRating(m.id, "ratingOkan", v)
+                      )}
                     </div>
-                    <div className="text-center mt-2 text-yellow-400 font-semibold">
+                    <div className="text-center mt-2 text-yellow-400 font-bold drop-shadow-[0_0_8px_rgba(255,255,0,0.8)]">
                       Ortalama: {avg}/10
                     </div>
                   </div>
