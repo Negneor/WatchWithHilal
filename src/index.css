@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 🎬 Sinematik Arka Plan Animasyonu */
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradientMove {
+  background-size: 200% 200%;
+  animation: gradientMove 12s ease infinite;
+}
+
+/* 💡 Scrollbar Stilini Kırmızı-Siyah Yap */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #e50914;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #111;
+}
+
+/* 🎞️ Küçük efektler */
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+}
+
+h1, h2, h3 {
+  text-shadow: 0 0 8px rgba(229, 9, 20, 0.6);
+}
+
+/* 💫 Hover geçişlerini yumuşat */
+button, input, textarea {
+  transition: all 0.2s ease-in-out;
+}
+
+/* 🎥 Mobilde düzgün padding */
+@media (max-width: 640px) {
+  body {
+    padding: 1rem;
+  }
+}
