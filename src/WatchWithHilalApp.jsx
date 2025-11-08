@@ -4,22 +4,9 @@ import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "fireb
 import app from "./firebase";
 
 function WatchWithHilalApp() {
-  const [authenticated, setAuthenticated] = useState(false);
-  const [password, setPassword] = useState("");
   const [film, setFilm] = useState("");
   const [films, setFilms] = useState([]);
-
   const db = getFirestore(app);
-
-  // 🔐 Giriş kontrolü
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (password === "kokaric") {
-      setAuthenticated(true);
-    } else {
-      alert("Yanlış şifre!");
-    }
-  };
 
   // 🎬 Film ekleme
   const addFilm = async (e) => {
@@ -43,46 +30,14 @@ function WatchWithHilalApp() {
     fetchFilms();
   };
 
+  // 🔄 Sayfa açılınca filmleri getir
   useEffect(() => {
-    if (authenticated) {
-      fetchFilms();
-    }
-  }, [authenticated]);
+    fetchFilms();
+  }, []);
 
-  if (!authenticated) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-red-900">
-        <motion.div
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center bg-black/50 p-10 rounded-2xl shadow-xl border border-red-500/30 backdrop-blur-md"
-        >
-          <h1 className="text-4xl font-bold text-red-500 mb-4">🎬 Watch With Hilal</h1>
-          <form onSubmit={handleLogin}>
-            <input
-              type="password"
-              placeholder="Şifre..."
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="p-2 rounded bg-gray-900 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
-            />
-            <button
-              type="submit"
-              className="ml-3 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded shadow-md transition"
-            >
-              Giriş
-            </button>
-          </form>
-        </motion.div>
-      </div>
-    );
-  }
-
-  // 🔥 Giriş sonrası direkt film paneli
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white flex flex-col items-center p-8">
-      <h1 className="text-3xl font-bold text-red-500 mb-6">Film Listesi 🎥</h1>
+      <h1 className="text-3xl font-bold text-red-500 mb-6">Watch With Hilal 🎬</h1>
 
       <form onSubmit={addFilm} className="flex mb-6">
         <input
@@ -102,7 +57,7 @@ function WatchWithHilalApp() {
 
       <div className="space-y-3 w-80">
         {films.length === 0 ? (
-          <p className="text-gray-400 text-center">Henüz film eklenmedi 🎬</p>
+          <p className="text-gray-400 text-center">Henüz film eklenmedi 🎥</p>
         ) : (
           films.map((item) => (
             <motion.div
