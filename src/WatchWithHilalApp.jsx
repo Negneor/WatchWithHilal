@@ -3,11 +3,18 @@ import { motion } from "framer-motion";
 import app from "./firebase";
 import { getFirestore } from "firebase/firestore";
 
+const CORRECT_PASSWORD = "kokaric";
+
+function normalize(str) {
+  if (!str) return "";
+  return str.trim().toLowerCase();
+}
+
 function WatchWithHilalApp() {
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
 
-  // 🔍 Firebase bağlantı testi
+  // Firebase bağlantı testi
   useEffect(() => {
     try {
       const db = getFirestore(app);
@@ -19,10 +26,18 @@ function WatchWithHilalApp() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (password === "kebap") {
+
+    const input = normalize(password);
+    const correct = normalize(CORRECT_PASSWORD);
+
+    console.log("DEBUG - Girilen:", input);
+    console.log("DEBUG - Doğru:", correct);
+    console.log("DEBUG - Eşleşme:", input === correct);
+
+    if (input === correct) {
       setAuthenticated(true);
     } else {
-      alert("Yanlış şifre!");
+      alert("Yanlış şifre! (ipucu: kokaric)");
     }
   };
 
@@ -59,14 +74,16 @@ function WatchWithHilalApp() {
               Giriş
             </button>
           </form>
+
           <p className="text-xs text-gray-400 mt-2 italic">
-            İpucu: kebap severlerin şifresi 🌯
+            İpucu: kokaric
           </p>
         </motion.div>
       </div>
     );
   }
 
+  // Giriş başarılıysa burası
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <h1 className="text-3xl font-bold text-red-500 drop-shadow-lg">
