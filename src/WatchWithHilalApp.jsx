@@ -51,7 +51,7 @@ function WatchWithHilalApp() {
 
   if (!authenticated) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-red-900 relative overflow-hidden">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-red-900">
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -79,9 +79,10 @@ function WatchWithHilalApp() {
     );
   }
 
+  // 🔥 Giriş sonrası direkt film paneli
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white flex flex-col items-center p-8">
-      <h1 className="text-3xl font-bold text-red-500 mb-6">Hoş geldin Hilal 🎬✨</h1>
+      <h1 className="text-3xl font-bold text-red-500 mb-6">Film Listesi 🎥</h1>
 
       <form onSubmit={addFilm} className="flex mb-6">
         <input
@@ -101,7 +102,7 @@ function WatchWithHilalApp() {
 
       <div className="space-y-3 w-80">
         {films.length === 0 ? (
-          <p className="text-gray-400 text-center">Henüz film eklenmedi 🎥</p>
+          <p className="text-gray-400 text-center">Henüz film eklenmedi 🎬</p>
         ) : (
           films.map((item) => (
             <motion.div
