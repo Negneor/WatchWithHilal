@@ -25,7 +25,7 @@ const CATEGORIES = [
   "Diğer",
 ];
 
-const SELECTED_BY_OPTIONS = ["Hilal", "Okan", "Ortak"];
+const SELECTED_BY_OPTIONS = ["Hilal", "-", "Ortak"];
 
 function WatchWithHilalApp() {
   const [title, setTitle] = useState("");
@@ -197,7 +197,6 @@ function WatchWithHilalApp() {
         </h1>
       </motion.div>
 
-      {/* Arama Formu */}
       <motion.form
         onSubmit={handleSearch}
         className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-3 mb-4 justify-center"
@@ -218,7 +217,7 @@ function WatchWithHilalApp() {
         </button>
       </motion.form>
 
-      {/* 🔽 FİLTRE BLOĞU */}
+      {/* Filtreler */}
       <div className="max-w-6xl mx-auto flex flex-wrap gap-3 justify-center mt-4 mb-8 text-sm">
         <select
           value={filterStatus}
@@ -267,7 +266,7 @@ function WatchWithHilalApp() {
         </label>
       </div>
 
-      {/* Popup ve Filmler */}
+      {/* Popup ve film kartları */}
       <AnimatePresence>
         {searchResults.length > 0 && (
           <motion.div className="fixed inset-0 bg-black/85 flex items-center justify-center z-50 p-4">
@@ -375,8 +374,8 @@ function WatchWithHilalApp() {
                       )}
                     </div>
                     <div>
-                      <span className="text-blue-400 font-semibold block text-center mb-1">
-                        Okan
+                      <span className="text-gray-400 font-semibold block text-center mb-1">
+                        –
                       </span>
                       {renderHearts(m.ratingOkan || 0, (v) =>
                         updateRating(m, "ratingOkan", v)
